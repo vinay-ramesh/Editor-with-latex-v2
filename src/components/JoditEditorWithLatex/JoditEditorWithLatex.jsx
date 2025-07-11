@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
 import katex from 'katex';
 import html2canvas from 'html2canvas';
@@ -9,7 +9,7 @@ import "./JoditEditorWithLatex.css";
 import { dialogContent } from "./helperVariables";
 
 const JoditEditorWithLatex = (props) => {
-    const { editorText, updateQuestionContent } = props
+    const { editorText, setEditorText } = props
     const editor = useRef(null);
 
     const insertLatexAsImage = (editorInstance, latexCode) => {
@@ -164,7 +164,10 @@ const JoditEditorWithLatex = (props) => {
                 value={editorText}
                 config={config}
                 tabIndex={1}
-                onBlur={newContent => updateQuestionContent(newContent)}
+                onBlur={newContent =>{
+                    const formattedContent = newContent?.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()
+                    setEditorText(formattedContent)
+                }}
             />
         </div>
     );
