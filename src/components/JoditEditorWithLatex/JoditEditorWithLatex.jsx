@@ -156,22 +156,22 @@ const JoditEditorWithLatex = () => {
         statusbar:false
     }), []);
 
-    const handleDownload = () => {
-        if (questionContent) {
-            const wrappedContent = `<div class="question_printable_text">${questionContent}</div>`;
-            const blob = new Blob([wrappedContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${new Date().toISOString()}-question-content.html`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        } else {
-            alert("Nothing to download.");
-        }
-    };
+    // const handleDownload = () => {
+    //     if (questionContent) {
+    //         const wrappedContent = `<div class="question_printable_text">${questionContent}</div>`;
+    //         const blob = new Blob([wrappedContent], { type: 'text/html' });
+    //         const url = URL.createObjectURL(blob);
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.download = `${new Date().toISOString()}-question-content.html`;
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         document.body.removeChild(link);
+    //         URL.revokeObjectURL(url);
+    //     } else {
+    //         alert("Nothing to download.");
+    //     }
+    // };
 
     return (
         <div className='editor'>
@@ -182,10 +182,10 @@ const JoditEditorWithLatex = () => {
                 tabIndex={1}
                 onBlur={newContent => setQuestionContent(newContent)}
             />
-            <button style={{ padding: "10px", alignSelf: "flex-start", cursor: "pointer" }}
+            {/* <button style={{ padding: "10px", alignSelf: "flex-start", cursor: "pointer" }}
                 onClick={handleDownload}
             >Download file
-            </button>
+            </button> */}
         </div>
     );
 };

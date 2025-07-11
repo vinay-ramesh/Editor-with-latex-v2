@@ -5,6 +5,8 @@ import Modal from "./components/Modal/Modal";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [intialText, setInitialText] = useState("")
+  const [questionContent, setQuestionContent] = useState([{ content: "", type: "" }])
 
   const handleSave = () => {
     alert('Save clicked!');
@@ -24,6 +26,14 @@ function App() {
       >
         Add Question Content
       </button>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="demo-button"
+        style={{ marginLeft: "1.5rem", cursor: `${questionContent[0].content}` ? "pointer" : "not-allowed" }}
+        disabled={questionContent[0].content ? false : true}
+      >
+        Add Options
+      </button>
 
       <Modal
         isOpen={isModalOpen}
@@ -31,8 +41,15 @@ function App() {
         onSave={handleSave}
         title="Example Modal"
       >
-        <JoditEditorWithLatex />
+        <JoditEditorWithLatex intialText={intialText} />
       </Modal>
+      <div className="question_wrapper">
+        {questionContent.map((ele) => {
+          return (
+            <p>{ele.content}</p>
+          )
+        })}
+      </div>
     </div>
   );
 }

@@ -3,16 +3,16 @@ import "./Modal.css"
 const Modal = ({ isOpen, onClose, onSave, title = "Modal Title", children }) => {
   if (!isOpen) return null;
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+  // const handleBackdropClick = (e) => {
+  //   if (e.target === e.currentTarget) {
+  //     onClose();
+  //   }
+  // };
 
   return (
     <div 
       className="modal-backdrop"
-      onClick={handleBackdropClick}
+      // onClick={handleBackdropClick}
     >
       <div className="modal-container">
         <div className="modal-content">

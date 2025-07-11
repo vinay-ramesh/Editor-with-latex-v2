@@ -68,3 +68,7 @@
   margin: 0;
   padding: 0;
 }
+
+.jodit-react-container {
+  width: 100% !important;
+}
