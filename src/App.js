@@ -124,7 +124,7 @@ function App() {
         {questionContent.length ?
           questionContent?.map((ele, index) => {
             return (
-              <p key={index} style={{ textAlign: "left" }} onClick={() => handleContentClick(index)}>{ele.content}</p>
+              <p key={index} style={{ textAlign: "left", cursor:"pointer" }} onClick={() => handleContentClick(index)}>{ele.content}</p>
             )
           }) :
           <div style={{ textAlign: "left", cursor: "pointer" }}>{"Add content to display here"}</div>
