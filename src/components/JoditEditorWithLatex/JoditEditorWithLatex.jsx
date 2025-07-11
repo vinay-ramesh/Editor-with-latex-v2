@@ -154,12 +154,6 @@ const JoditEditorWithLatex = () => {
             exec: (editor) => showLatexDialog(editor)
         }],
         statusbar:false
-        // 3. REMOVED custom event handlers that were causing conflicts.
-        // events: {
-        //     click: saveCursorPosition,
-        //     keyup: saveCursorPosition,
-        //     focus: restoreCursorPosition,
-        // },
     }), []);
 
     const handleDownload = () => {
@@ -181,7 +175,6 @@ const JoditEditorWithLatex = () => {
 
     return (
         <div className='editor'>
-            <h2>Custom Editor with LaTeX/MathJax Support</h2>
             <JoditEditor
                 ref={editor}
                 value={questionContent}
