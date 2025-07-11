@@ -8,9 +8,9 @@ import formulaIcon from "../../assets/fxx.webp";
 import "./JoditEditorWithLatex.css";
 import { dialogContent } from "./helperVariables";
 
-const JoditEditorWithLatex = () => {
+const JoditEditorWithLatex = (props) => {
+    const { editorText, updateQuestionContent } = props
     const editor = useRef(null);
-    const [questionContent, setQuestionContent] = useState("");
 
     const insertLatexAsImage = (editorInstance, latexCode) => {
         try {
@@ -79,6 +79,7 @@ const JoditEditorWithLatex = () => {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const showLatexDialog = (editorInstance) => {
         // 1. Save cursor position using Jodit's API *before* opening the dialog
         editorInstance.s.save();
@@ -154,38 +155,17 @@ const JoditEditorWithLatex = () => {
             exec: (editor) => showLatexDialog(editor)
         }],
         statusbar:false
-    }), []);
-
-    // const handleDownload = () => {
-    //     if (questionContent) {
-    //         const wrappedContent = `<div class="question_printable_text">${questionContent}</div>`;
-    //         const blob = new Blob([wrappedContent], { type: 'text/html' });
-    //         const url = URL.createObjectURL(blob);
-    //         const link = document.createElement('a');
-    //         link.href = url;
-    //         link.download = `${new Date().toISOString()}-question-content.html`;
-    //         document.body.appendChild(link);
-    //         link.click();
-    //         document.body.removeChild(link);
-    //         URL.revokeObjectURL(url);
-    //     } else {
-    //         alert("Nothing to download.");
-    //     }
-    // };
+    }), [showLatexDialog]);
 
     return (
         <div className='editor'>
             <JoditEditor
                 ref={editor}
-                value={questionContent}
+                value={editorText}
                 config={config}
                 tabIndex={1}
-                onBlur={newContent => setQuestionContent(newContent)}
+                onBlur={newContent => updateQuestionContent(newContent)}
             />
-            {/* <button style={{ padding: "10px", alignSelf: "flex-start", cursor: "pointer" }}
-                onClick={handleDownload}
-            >Download file
-            </button> */}
         </div>
     );
 };
