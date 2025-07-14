@@ -118,14 +118,13 @@ function App() {
         onSave={handleSave}
         title="Example Modal"
       >
-        <JoditEditorWithLatex editorText={editorText} setEditorText={setEditorText} />
+        <JoditEditorWithLatex editorText={editorText.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()} setEditorText={setEditorText} />
       </Modal>
-      <div className="question_wrapper" style={{ border: "1px solid red", padding: "1em", margin: "1em" }}>
+      <div className="question_wrapper" style={{ textAlign: "left", padding: "0.5em", margin: "0.5em"}}>
         {questionContent.length ?
           questionContent?.map((ele, index) => {
             return (
-              // <p key={index} style={{ textAlign: "left", cursor:"pointer" }} onClick={() => handleContentClick(index)}>{ele.content}</p>
-              <div key={index} style={{ textAlign: "left", cursor: "pointer" }} onClick={() => handleContentClick(index)}  dangerouslySetInnerHTML={{ __html: ele.content }} />
+              <div key={index} style={{ cursor: "pointer" }} onClick={() => handleContentClick(index)}  dangerouslySetInnerHTML={{ __html: ele.content }} />
             )
           }) :
           <div style={{ textAlign: "left", cursor: "pointer" }}>{"Add content to display here"}</div>

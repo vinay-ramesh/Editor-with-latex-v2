@@ -165,8 +165,9 @@ const JoditEditorWithLatex = (props) => {
                 config={config}
                 tabIndex={1}
                 onBlur={newContent =>{
-                    const formattedContent = newContent?.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()
-                    setEditorText(formattedContent)
+                    // const formattedContent = newContent?.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()
+                    // setEditorText(formattedContent)
+                    setEditorText(newContent)
                 }}
             />
         </div>
