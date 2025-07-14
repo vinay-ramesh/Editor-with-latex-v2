@@ -41,7 +41,7 @@ function App() {
 
   const handleDownload = () => {
     if (questionContent.length > 0) {
-      const fullHtml = questionContent.map(item => item.content).join('<hr />');
+      const fullHtml = questionContent.map(item => item.content).join('<br />');
       const wrappedContent = `<div class="question_printable_text">${fullHtml}</div>`;
       const blob = new Blob([wrappedContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -95,7 +95,7 @@ function App() {
           questionContent.map((ele, index) => (
             <div
               key={index}
-              style={{ cursor: "pointer", borderBottom: "2px dashed #eee", padding: "3px" }}
+              style={{ cursor: "pointer", border: "2px dashed #eee", borderRadius: "8px" }}
               onClick={() => handleContentClick(index)}
               dangerouslySetInnerHTML={{ __html: ele.content }}
             />
