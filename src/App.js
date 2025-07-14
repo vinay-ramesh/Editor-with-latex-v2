@@ -60,7 +60,7 @@ function App() {
 
   const handleContentClick = (clickedIndex) => {
     const clickedObj = questionContent[clickedIndex]
-    // console.log({ clickedObj, clickedIndex })
+    console.log({ clickedObj, clickedIndex })
     setClickedIndex(clickedIndex)
     setIsModalOpen(true)
     setEditorText(clickedObj.content)
@@ -130,7 +130,7 @@ function App() {
               <div key={index} style={{ cursor: "pointer" }} onClick={() => handleContentClick(index)} dangerouslySetInnerHTML={{ __html: ele.content }} />
             )
           }) :
-          <div style={{ textAlign: "left", cursor: "pointer" }}>{"Add content to display here"}</div>
+          <div style={{ textAlign: "left" }}>{"Add content to display here"}</div>
         }
       </div>
     </div>

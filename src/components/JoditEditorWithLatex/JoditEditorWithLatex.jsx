@@ -156,7 +156,7 @@ const JoditEditorWithLatex = (props) => {
         }],
         statusbar:false
     }), [showLatexDialog]);
-
+    console.log("editorText", editorText)
     return (
         <div className='editor'>
             <JoditEditor
