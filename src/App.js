@@ -9,7 +9,7 @@ function App() {
   const [questionContent, setQuestionContent] = useState([])
   const [clickedIndex, setClickedIndex] = useState(-1)
   console.log("questionContent", questionContent)
-  
+
   const handleSave = () => {
     setIsModalOpen(false);
     updateQuestionContent()
@@ -118,13 +118,16 @@ function App() {
         onSave={handleSave}
         title="Example Modal"
       >
-        <JoditEditorWithLatex editorText={editorText.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()} setEditorText={setEditorText} />
+        <JoditEditorWithLatex
+          editorText={editorText.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()}
+          setEditorText={setEditorText}
+        />
       </Modal>
-      <div className="question_wrapper" style={{ textAlign: "left", padding: "0.5em", margin: "0.5em"}}>
+      <div className="question_wrapper" style={{ textAlign: "left", padding: "0.5em", margin: "0.5em" }}>
         {questionContent.length ?
           questionContent?.map((ele, index) => {
             return (
-              <div key={index} style={{ cursor: "pointer" }} onClick={() => handleContentClick(index)}  dangerouslySetInnerHTML={{ __html: ele.content }} />
+              <div key={index} style={{ cursor: "pointer" }} onClick={() => handleContentClick(index)} dangerouslySetInnerHTML={{ __html: ele.content }} />
             )
           }) :
           <div style={{ textAlign: "left", cursor: "pointer" }}>{"Add content to display here"}</div>
