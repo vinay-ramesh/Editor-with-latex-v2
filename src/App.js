@@ -8,6 +8,7 @@ function App() {
   const [editorText, setEditorText] = useState("");
   const [questionContent, setQuestionContent] = useState([]);
   const [clickedIndex, setClickedIndex] = useState(-1);
+  const [className, setClassName] = useState("")
 
   const handleSave = () => {
     setIsModalOpen(false);
@@ -22,19 +23,21 @@ function App() {
   };
 
   const updateQuestionContent = useCallback(() => {
-    if (clickedIndex === -1) {
-      setQuestionContent(prevState => [...prevState, { content: editorText, type: "question_text" }]);
-    } else {
-      const updatedCustomList = questionContent.map((item, index) => {
-        if (index === clickedIndex) {
-          return { ...item, content: editorText };
-        }
-        return item;
-      });
-      setQuestionContent(updatedCustomList);
-      setClickedIndex(-1);
+    if (editorText) {
+      if (clickedIndex === -1) {
+        setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
+      } else {
+        const updatedCustomList = questionContent.map((item, index) => {
+          if (index === clickedIndex) {
+            return { ...item, content: editorText };
+          }
+          return item;
+        });
+        setQuestionContent(updatedCustomList);
+        setClickedIndex(-1);
+      }
     }
-  }, [clickedIndex, editorText, questionContent]);
+  }, [clickedIndex, editorText, questionContent, className]);
 
   const handleDownload = () => {
     if (questionContent.length > 0) {
@@ -64,9 +67,15 @@ function App() {
   return (
     <div className="App">
       <h2>Editor with MathJax Support</h2>
-      <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); }} className="demo-button">
-        Add Question Content
-      </button>
+      {!questionContent[0]?.content && <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("question_text") }} className="demo-button">
+          Add Question Content
+        </button>
+      }
+      {questionContent[0]?.content &&
+        <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("option_text") }} className="demo-button" style={{ marginLeft: "1.5rem" }}>
+          Add Options
+        </button>
+      }
       <button onClick={handleDownload} className="demo-button" style={{ marginLeft: "1.5rem" }}>
         Download File
       </button>
@@ -86,12 +95,12 @@ function App() {
           questionContent.map((ele, index) => (
             <div
               key={index}
-              style={{ cursor: "pointer", borderBottom: "1px dashed #eee", padding: "10px" }}
+              style={{ cursor: "pointer", borderBottom: "2px dashed #eee", padding: "3px" }}
               onClick={() => handleContentClick(index)}
               dangerouslySetInnerHTML={{ __html: ele.content }}
             />
           )) :
-          <div style={{ textAlign: "left", padding: "10px" }}>{"Add content to display here"}</div>
+          <div style={{ textAlign: "left", padding: "3px" }}>{"Add content to display here"}</div>
         }
       </div>
     </div>
