@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useCallback } from 'react';
 import JoditEditor from 'jodit-react';
 import katex from 'katex';
 import html2canvas from 'html2canvas';
@@ -8,48 +8,42 @@ import formulaIcon from "../../assets/fxx.webp";
 import "./JoditEditorWithLatex.css";
 import { dialogContent } from "./helperVariables";
 
-const JoditEditorWithLatex = (props) => {
-    const { editorText, setEditorText } = props
+const JoditEditorWithLatex = ({ editorText, setEditorText }) => {
     const editor = useRef(null);
 
     const insertLatexAsImage = (editorInstance, latexCode) => {
         try {
             const html = katex.renderToString(latexCode, {
                 throwOnError: false,
-                displayMode: true, // Renders the formula as a block element
+                displayMode: true,
             });
 
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
-
-            // 1. Set padding to 0 on the container div
             tempDiv.style.cssText = `
                 position: absolute;
                 left: -9999px;
                 top: -9999px;
                 background: white;
-                padding: 4px; /* IMPORTANT: Removed padding */
+                padding: 2px;
                 font-size: 24px;
             `;
 
-            // 2. Find the KaTeX element and remove its margin
             const katexElement = tempDiv.querySelector('.katex-display');
             if (katexElement) {
-                katexElement.style.margin = '4'; // IMPORTANT: Override KaTeX default margin
+                // CSS margin values require a unit, e.g., '0px' or just '0'
+                katexElement.style.margin = '0';
             }
 
             document.body.appendChild(tempDiv);
-    
-            // Use a short timeout to ensure fonts are rendered
+
             setTimeout(() => {
                 html2canvas(tempDiv, {
-                    backgroundColor: null, // Transparent background
-                    scale: 3,              // Higher scale for better resolution
+                    backgroundColor: null,
+                    scale: 3,
                     useCORS: true,
                 }).then(canvas => {
                     const imageDataUrl = canvas.toDataURL('image/png');
-
-                    // Restore focus to the editor before inserting
                     editorInstance.s.focus();
 
                     const img = editorInstance.createInside.element('img');
@@ -58,13 +52,10 @@ const JoditEditorWithLatex = (props) => {
                     img.setAttribute('alt', `LaTeX: ${latexCode}`);
                     img.style.verticalAlign = 'middle';
                     img.style.maxWidth = '100%';
-                    // img.style.height = `${canvas.height / 3}px`; // Scale down the image in the editor == original
-                    /* Decided to scale down the heiht some more by 3*2 = 6 times */
-                    img.style.height = `${canvas.height / 6}px`; // Scale down the image in the editor
+                    // This can be adjusted based on preference
+                    img.style.height = `${canvas.height / 6}px`;
 
-                    // Use Jodit's reliable API to insert the image
                     editorInstance.s.insertImage(img, false, null);
-
                     document.body.removeChild(tempDiv);
                 }).catch(error => {
                     console.error('Error converting LaTeX to image:', error);
@@ -79,21 +70,16 @@ const JoditEditorWithLatex = (props) => {
         }
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const showLatexDialog = (editorInstance) => {
-        // 1. Save cursor position using Jodit's API *before* opening the dialog
+    const showLatexDialog = useCallback((editorInstance) => {
         editorInstance.s.save();
-
         const dialog = editorInstance.dlg({
             title: 'Insert LaTeX Formula',
             resizable: false,
             draggable: true,
             buttons: ['fullsize', 'dialog.close']
         });
-
         dialog.setContent(dialogContent);
         dialog.open();
-
         const latexInput = dialog.container.querySelector('#latex-input');
         const latexPreview = dialog.container.querySelector('#latex-preview');
         const insertBtn = dialog.container.querySelector('#latex-insert');
@@ -103,10 +89,7 @@ const JoditEditorWithLatex = (props) => {
             const latexCode = latexInput.value.trim();
             if (latexCode) {
                 try {
-                    latexPreview.innerHTML = katex.renderToString(latexCode, {
-                        throwOnError: false,
-                        displayMode: true
-                    });
+                    latexPreview.innerHTML = katex.renderToString(latexCode, { throwOnError: false, displayMode: true });
                 } catch (error) {
                     latexPreview.innerHTML = '<span style="color: red;">Error: Invalid LaTeX syntax</span>';
                 }
@@ -116,37 +99,26 @@ const JoditEditorWithLatex = (props) => {
         };
 
         latexInput.addEventListener('input', updatePreview);
-        cancelBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            dialog.close();
-        });
-
+        cancelBtn.addEventListener('click', (e) => { e.preventDefault(); dialog.close(); });
         insertBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const latexCode = latexInput.value.trim();
             if (latexCode) {
-                // 2. Restore cursor position just before inserting
                 editorInstance.s.restore();
                 insertLatexAsImage(editorInstance, latexCode);
                 dialog.close();
             }
         });
-
         latexInput.focus();
-    };
+    }, []); // Note: The empty dependency array is key
 
     const config = useMemo(() => ({
         readonly: false,
         height: "80vh",
-        // The default image button should now work correctly without event conflicts.
-        uploader: {
-            insertImageAsBase64URI: true
-        },
+        uploader: { insertImageAsBase64URI: true },
         buttons: [
-            'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript',
-            '|', 'ul', 'ol', 'indent', 'outdent', 'lineHeight', '|',
-            'brush', 'paragraph', '|', 'image', '|', 'table', '|', 'align',
-            'undo', 'redo', '|', 'hr', 'eraser'
+            'bold', 'italic', 'underline', '|', 'subscript', 'superscript', '|', 'ul', 'ol', '|',
+            'brush', '|', 'image', '|', 'table', '|', 'align', '|', 'undo', 'redo', '|', 'eraser'
         ],
         extraButtons: [{
             name: 'latex',
@@ -154,9 +126,9 @@ const JoditEditorWithLatex = (props) => {
             tooltip: 'Insert LaTeX Formula',
             exec: (editor) => showLatexDialog(editor)
         }],
-        statusbar:false
+        statusbar: false
     }), [showLatexDialog]);
-    console.log("editorText", editorText)
+
     return (
         <div className='editor'>
             <JoditEditor
@@ -164,11 +136,7 @@ const JoditEditorWithLatex = (props) => {
                 value={editorText}
                 config={config}
                 tabIndex={1}
-                onBlur={newContent =>{
-                    // const formattedContent = newContent?.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()
-                    // setEditorText(formattedContent)
-                    setEditorText(newContent)
-                }}
+                onBlur={newContent => setEditorText(newContent)}
             />
         </div>
     );
