@@ -141,7 +141,9 @@ function App() {
             </button>
             <button
               className="btn-no"
-              onClick={closeConfirmWithAnimation}
+              onClick={() =>
+                closeConfirmWithAnimation()
+              }
             >
               No
             </button>
