@@ -12,6 +12,7 @@
     "jodit-react": "^5.2.19",
     "katex": "^0.16.22",
     "react": "^19.1.0",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

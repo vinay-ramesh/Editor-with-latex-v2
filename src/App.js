@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
-import './App.css';
 import JoditEditorWithLatex from './components/JoditEditorWithLatex/JoditEditorWithLatex';
 import Modal from "./components/Modal/Modal";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import './App.css';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +24,21 @@ function App() {
     setEditorText("");   // Reset editor text on close
   };
 
+  const closeConfirmWithAnimation = (onCloseCallback) => {
+    const overlay = document.querySelector('.react-confirm-alert-overlay');
+    const modal = document.querySelector('.react-confirm-alert');
+
+    if (modal) {
+      modal.classList.add('fade-out');
+      setTimeout(() => {
+        overlay?.remove();
+        onCloseCallback?.(); // Reset state after close
+      }, 300); // Match duration in CSS
+    }
+  };
+
   const updateQuestionContent = useCallback(() => {
+    console.log({ clickedIndex, editorText })
     if (editorText) {
       if (clickedIndex === -1) {
         setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
@@ -35,9 +51,37 @@ function App() {
         });
         setQuestionContent(updatedCustomList);
         setClickedIndex(-1);
-      } else if (editorText === '<p><br></p>') {
+      } else if (editorText === '<p><br></p>' && clickedIndex !== 0) {
         const updatedList = questionContent.filter((ele, index) => index !== clickedIndex)
         setQuestionContent(updatedList);
+      } else if (editorText === '<p><br></p>' && clickedIndex === 0) {
+        confirmAlert({
+          title: 'Are you sure?',
+          message: 'Clearing the question will wipe out all its options.',
+          buttons: [], // Leave empty to use custom buttons
+          childrenElement: () => (
+            <div className="custom-button-wrapper">
+              <button className="btn-yes"
+                onClick={() => {
+                  closeConfirmWithAnimation(() => {
+                    setQuestionContent([]); // Reset your state after animation
+                  });
+                }}
+
+              >
+                Yes
+              </button>
+              <button className="btn-no"
+                onClick={() => {
+                  closeConfirmWithAnimation(); // Just close
+                }}
+              >
+                No
+              </button>
+            </div>
+          ),
+          closeOnClickOutside: true,
+        });
       }
     }
   }, [clickedIndex, editorText, questionContent, className]);
@@ -71,8 +115,8 @@ function App() {
     <div className="App">
       <h2>Editor with MathJax Support</h2>
       {!questionContent[0]?.content && <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("question_text") }} className="demo-button">
-          Add Question Content
-        </button>
+        Add Question Content
+      </button>
       }
       {questionContent[0]?.content &&
         <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("option_text") }} className="demo-button" style={{ marginLeft: "1.5rem" }}>
