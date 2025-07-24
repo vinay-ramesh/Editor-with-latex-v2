@@ -4,6 +4,7 @@ import Modal from "./components/Modal/Modal";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './App.css';
+import info from "./assets/info.svg"
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,56 +37,6 @@ function App() {
       }, 300); // Match duration in CSS
     }
   };
-
-  // const updateQuestionContent = useCallback(() => {
-  //   console.log({ clickedIndex, editorText })
-  //   if (editorText) {
-  //     if (clickedIndex === -1) {
-  //       setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
-  //     } else if (editorText !== '<p><br></p>') {
-  //       const updatedCustomList = questionContent.map((item, index) => {
-  //         if (index === clickedIndex) {
-  //           return { ...item, content: editorText };
-  //         }
-  //         return item;
-  //       });
-  //       setQuestionContent(updatedCustomList);
-  //       setClickedIndex(-1);
-  //     } else if (editorText === '<p><br></p>' && clickedIndex !== 0) {
-  //       // Removing element from list if the editor text is '<p><br></p>'
-  //       const updatedList = questionContent.filter((ele, index) => index !== clickedIndex)
-  //       setQuestionContent(updatedList);
-  //     } else if (editorText === '<p><br></p>' && clickedIndex === 0) {
-  //       confirmAlert({
-  //         title: 'Are you sure?',
-  //         message: 'Clearing the question will wipe out all its options.',
-  //         buttons: [], // Leave empty to use custom buttons
-  //         childrenElement: () => (
-  //           <div className="custom-button-wrapper">
-  //             <button className="btn-yes"
-  //               onClick={() => {
-  //                 closeConfirmWithAnimation(() => {
-  //                   setQuestionContent([]); // Reset your state after animation
-  //                 });
-  //               }}
-
-  //             >
-  //               Yes
-  //             </button>
-  //             <button className="btn-no"
-  //               onClick={() => {
-  //                 closeConfirmWithAnimation(); // Just close
-  //               }}
-  //             >
-  //               No
-  //             </button>
-  //           </div>
-  //         ),
-  //         closeOnClickOutside: true,
-  //       });
-  //     }
-  //   }
-  // }, [clickedIndex, editorText, questionContent, className]);
 
   const updateQuestionContent = useCallback(() => {
     if (!editorText) return;
@@ -154,7 +105,6 @@ function App() {
     }
   }, [clickedIndex, editorText, className, questionContent]);
 
-  
   const handleDownload = () => {
     if (questionContent.length > 0) {
       const fullHtml = questionContent.map(item => item.content).join('<br />');
@@ -182,7 +132,10 @@ function App() {
 
   return (
     <div className="App">
-      <h2>Editor with MathJax Support</h2>
+      <div className="app-header">
+        <h2 style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>Editor with MathJax Support</h2>
+        <img src={info} alt="editor-info" style={{ width: "34px", height: "auto" }} />
+      </div>
       {!questionContent[0]?.content && <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("question_text") }} className="demo-button">
         Add Question Content
       </button>

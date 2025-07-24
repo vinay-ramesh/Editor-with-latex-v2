@@ -142,3 +142,11 @@
 .react-confirm-alert.fade-out {
   animation: fadeOut 0.3s forwards;
 }
+
+.app-header {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+}
