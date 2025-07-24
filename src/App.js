@@ -26,7 +26,7 @@ function App() {
     if (editorText) {
       if (clickedIndex === -1) {
         setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
-      } else {
+      } else if (editorText !== '<p><br></p>') {
         const updatedCustomList = questionContent.map((item, index) => {
           if (index === clickedIndex) {
             return { ...item, content: editorText };
@@ -35,6 +35,9 @@ function App() {
         });
         setQuestionContent(updatedCustomList);
         setClickedIndex(-1);
+      } else if (editorText === '<p><br></p>') {
+        const updatedList = questionContent.filter((ele, index) => index !== clickedIndex)
+        setQuestionContent(updatedList);
       }
     }
   }, [clickedIndex, editorText, questionContent, className]);
