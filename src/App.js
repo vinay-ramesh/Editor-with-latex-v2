@@ -37,55 +37,122 @@ function App() {
     }
   };
 
+  // const updateQuestionContent = useCallback(() => {
+  //   console.log({ clickedIndex, editorText })
+  //   if (editorText) {
+  //     if (clickedIndex === -1) {
+  //       setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
+  //     } else if (editorText !== '<p><br></p>') {
+  //       const updatedCustomList = questionContent.map((item, index) => {
+  //         if (index === clickedIndex) {
+  //           return { ...item, content: editorText };
+  //         }
+  //         return item;
+  //       });
+  //       setQuestionContent(updatedCustomList);
+  //       setClickedIndex(-1);
+  //     } else if (editorText === '<p><br></p>' && clickedIndex !== 0) {
+  //       // Removing element from list if the editor text is '<p><br></p>'
+  //       const updatedList = questionContent.filter((ele, index) => index !== clickedIndex)
+  //       setQuestionContent(updatedList);
+  //     } else if (editorText === '<p><br></p>' && clickedIndex === 0) {
+  //       confirmAlert({
+  //         title: 'Are you sure?',
+  //         message: 'Clearing the question will wipe out all its options.',
+  //         buttons: [], // Leave empty to use custom buttons
+  //         childrenElement: () => (
+  //           <div className="custom-button-wrapper">
+  //             <button className="btn-yes"
+  //               onClick={() => {
+  //                 closeConfirmWithAnimation(() => {
+  //                   setQuestionContent([]); // Reset your state after animation
+  //                 });
+  //               }}
+
+  //             >
+  //               Yes
+  //             </button>
+  //             <button className="btn-no"
+  //               onClick={() => {
+  //                 closeConfirmWithAnimation(); // Just close
+  //               }}
+  //             >
+  //               No
+  //             </button>
+  //           </div>
+  //         ),
+  //         closeOnClickOutside: true,
+  //       });
+  //     }
+  //   }
+  // }, [clickedIndex, editorText, questionContent, className]);
+
   const updateQuestionContent = useCallback(() => {
-    console.log({ clickedIndex, editorText })
-    if (editorText) {
-      if (clickedIndex === -1) {
-        setQuestionContent(prevState => [...prevState, { content: editorText, type: className }]);
-      } else if (editorText !== '<p><br></p>') {
-        const updatedCustomList = questionContent.map((item, index) => {
-          if (index === clickedIndex) {
-            return { ...item, content: editorText };
-          }
-          return item;
-        });
-        setQuestionContent(updatedCustomList);
-        setClickedIndex(-1);
-      } else if (editorText === '<p><br></p>' && clickedIndex !== 0) {
-        const updatedList = questionContent.filter((ele, index) => index !== clickedIndex)
-        setQuestionContent(updatedList);
-      } else if (editorText === '<p><br></p>' && clickedIndex === 0) {
-        confirmAlert({
-          title: 'Are you sure?',
-          message: 'Clearing the question will wipe out all its options.',
-          buttons: [], // Leave empty to use custom buttons
-          childrenElement: () => (
-            <div className="custom-button-wrapper">
-              <button className="btn-yes"
-                onClick={() => {
-                  closeConfirmWithAnimation(() => {
-                    setQuestionContent([]); // Reset your state after animation
-                  });
-                }}
+    if (!editorText) return;
 
-              >
-                Yes
-              </button>
-              <button className="btn-no"
-                onClick={() => {
-                  closeConfirmWithAnimation(); // Just close
-                }}
-              >
-                No
-              </button>
-            </div>
-          ),
-          closeOnClickOutside: true,
-        });
-      }
+    const isEmptyParagraph = editorText === '<p><br></p>';
+
+    console.log({ clickedIndex, editorText });
+
+    // Case 1: Add new item
+    if (clickedIndex === -1 && !isEmptyParagraph) {
+      setQuestionContent(prev => [...prev, { content: editorText, type: className }]);
+      return;
     }
-  }, [clickedIndex, editorText, questionContent, className]);
 
+    // Case 2: Update existing item
+    if (!isEmptyParagraph && clickedIndex !== -1) {
+      setQuestionContent(prev =>
+        prev.map((item, idx) =>
+          idx === clickedIndex ? { ...item, content: editorText } : item
+        )
+      );
+      setClickedIndex(-1);
+      return;
+    }
+
+    // Case 3: Remove item when it's empty (not first item)
+    if (isEmptyParagraph && clickedIndex > 0) {
+      setQuestionContent(prev => prev.filter((_, idx) => idx !== clickedIndex));
+      return;
+    }
+
+    // Case 4: If only one item exists and it's being cleared, just wipe without confirm
+    if (isEmptyParagraph && clickedIndex === 0 && questionContent.length === 1) {
+      setQuestionContent([]);
+      return;
+    }
+
+    // Case 5: Ask for confirmation when clearing the first item but multiple options exist
+    if (isEmptyParagraph && clickedIndex === 0 && questionContent.length > 1) {
+      confirmAlert({
+        title: 'Are you sure?',
+        message: 'Clearing the question will wipe out all its options.',
+        buttons: [],
+        childrenElement: () => (
+          <div className="custom-button-wrapper">
+            <button
+              className="btn-yes"
+              onClick={() =>
+                closeConfirmWithAnimation(() => setQuestionContent([]))
+              }
+            >
+              Yes
+            </button>
+            <button
+              className="btn-no"
+              onClick={closeConfirmWithAnimation}
+            >
+              No
+            </button>
+          </div>
+        ),
+        closeOnClickOutside: true,
+      });
+    }
+  }, [clickedIndex, editorText, className, questionContent]);
+
+  
   const handleDownload = () => {
     if (questionContent.length > 0) {
       const fullHtml = questionContent.map(item => item.content).join('<br />');
