@@ -6,3 +6,43 @@
     width: auto;
     margin: 0 auto;
 }
+
+/* Hide line break markers and visual elements */
+.jodit-wysiwyg br:after,
+.jodit-wysiwyg br:before {
+    content: none !important;
+    display: none !important;
+}
+
+/* Hide any pilcrow symbols (¶) that represent line breaks */
+.jodit-wysiwyg *:after,
+.jodit-wysiwyg *:before {
+    content: none !important;
+}
+
+/* Hide invisible space markers */
+.jodit-container .jodit-space {
+    display: none !important;
+}
+
+/* Hide any break line visual indicators */
+.jodit-wysiwyg .jodit-break {
+    display: none !important;
+}
+
+/* General rule to hide visual break indicators */
+.jodit-wysiwyg [data-jodit-selection-marker] {
+    display: none !important;
+}
+
+/* Style for local file replacement message */
+.jodit-wysiwyg .local-file-warning {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ffcdd2;
+    display: inline-block;
+    font-size: 12px;
+    margin: 2px;
+}
