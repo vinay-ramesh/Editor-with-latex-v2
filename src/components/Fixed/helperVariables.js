@@ -35,3 +35,7 @@ export const dialogContent = `<div style="padding: 20px; width: 500px;">
           </button>
         </div>
       </div>`
+
+export const textEditorRules = `
+  <div>Hello</div>
+`

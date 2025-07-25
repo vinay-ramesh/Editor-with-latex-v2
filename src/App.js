@@ -6,6 +6,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import './App.css';
 import info from "./assets/info.svg"
 import toast, { Toaster } from 'react-hot-toast';
+import EditorInfo from "./components/EditorInfo/EditorInfo";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ function App() {
   const [questionContent, setQuestionContent] = useState([]);
   const [clickedIndex, setClickedIndex] = useState(-1);
   const [className, setClassName] = useState("")
+  const [openInfo, setOpenInfo] = useState(false)
 
   const handleSave = () => {
     setIsModalOpen(false);
@@ -25,6 +27,14 @@ function App() {
     setClickedIndex(-1); // Reset index on close
     setEditorText("");   // Reset editor text on close
   };
+
+  const handleInfoClose = () => {
+    setOpenInfo(false)
+  }
+
+  const handleInfoOpen = () => {
+    setOpenInfo(true)
+  }
 
   const closeConfirmWithAnimation = (onCloseCallback) => {
     const overlay = document.querySelector('.react-confirm-alert-overlay');
@@ -136,7 +146,7 @@ function App() {
       <div className="App">
         <div className="app-header">
           <h2 style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>Editor with MathJax Support</h2>
-          <img src={info} alt="editor-info" style={{ width: "34px", height: "auto" }} />
+          <img src={info} alt="editor-info" style={{ width: "34px", height: "auto", cursor:"pointer" }} onClick={handleInfoOpen}/>
         </div>
         <div className="app-container">
           <div style={{ margin: "10px", display: "flex", justifyContent: "flex-start", gap: "20px" }}>
@@ -175,6 +185,9 @@ function App() {
             editorText={editorText}
             setEditorText={setEditorText}
           />
+        </Modal>
+        <Modal isOpen={openInfo} onClose={handleInfoClose} onSave={handleInfoClose} title="Editor Info">
+          <EditorInfo />
         </Modal>
       </div>
       <Toaster position="top-center" reverseOrder={false} />
