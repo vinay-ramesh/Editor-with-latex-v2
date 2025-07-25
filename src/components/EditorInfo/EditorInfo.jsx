@@ -1,4 +1,5 @@
 import React from 'react';
+import formulaIcon from "../../assets/fxx.webp"
 
 const EditorInfo = () => {
     return (
@@ -9,10 +10,9 @@ const EditorInfo = () => {
             <li>Unwanted local file references (like <code>file://</code> images) are automatically removed to ensure clean content.</li>
             <li>The toolbar includes features like tables, lists, text alignment, undo/redo, and formula buttons.</li>
             <li>Inserted formulas retain their original LaTeX code internally for accurate review or future editing.</li>
-            <li>The editor is designed for consistent use across devices with minimal distractions.</li>
-            <li>All content is sanitized to remove unnecessary formatting or symbols, ensuring clean output for printing or publishing.</li>
-            <li>Ideal for preparing structured questions, equations, and diagrams in a printable format.</li>
-            <li>Note: Click the formula (∑) button to insert LaTeX-based math expressions.</li>
+            <li>Ideal for preparing structured questions, equations, and diagrams for question printable data.</li>
+            <li> Once all content is visible, use the download option to save your question as an HTML file for question bank usage.</li>
+            <li>Note: Click the formula <img src={formulaIcon} alt='formula-icon' style={{ width: "20px", height: "auto" }} /> button to insert LaTeX-based math expressions.</li>
             <li>Note: Dont click on Download File button without adding any Content.</li>
         </ul>
     );

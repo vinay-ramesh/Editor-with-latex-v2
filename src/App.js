@@ -130,7 +130,7 @@ function App() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } else {
-      toast.success("Dude, C’mon! Put something in before you hit download.");
+      toast.success("C’mon! Put something in before you hit download.");
     }
   };
 
