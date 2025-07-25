@@ -12,7 +12,7 @@ const EditorInfo = () => {
             <li>Inserted formulas retain their original LaTeX code internally for accurate review or future editing.</li>
             <li>Ideal for preparing structured questions, equations, and diagrams for question printable data.</li>
             <li> Once all content is visible, use the download option to save your question as an HTML file for question bank usage.</li>
-            <li>Note: Click the formula <img src={formulaIcon} alt='formula-icon' style={{ width: "20px", height: "auto" }} /> button to insert LaTeX-based math expressions.</li>
+            <li>Note: Click the formula <img src={formulaIcon} alt='formula-icon' style={{ width: "20px", height: "auto", verticalAlign: "middle" }} /> button to insert LaTeX-based math expressions.</li>
             <li>Note: Dont click on Download File button without adding any Content.</li>
         </ul>
     );
