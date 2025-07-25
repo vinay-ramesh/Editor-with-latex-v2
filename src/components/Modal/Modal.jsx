@@ -1,39 +1,50 @@
 import "./Modal.css"
 
-const Modal = ({ isOpen, onClose, onSave, title = "Modal Title", children }) => {
+const Modal = ({ isOpen, onClose, onSave, title, children }) => {
   if (!isOpen) return null;
 
-  // const handleBackdropClick = (e) => {
-  //   if (e.target === e.currentTarget) {
-  //     onClose();
-  //   }
-  // };
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
-    <div 
+    <div
       className="modal-backdrop"
-      // onClick={handleBackdropClick}
+      onClick={title === "Editor Info" ? handleBackdropClick : null}
     >
       <div className="modal-container">
         <div className="modal-content">
-          {/* <h2 className="modal-title">{title}</h2> */}
+          {title === 'Editor Info' && <h2 className="modal-title">{title}</h2>}
           <div className="modal-body">
             {children}
           </div>
-          <div className="modal-buttons">
-            <button
-              onClick={onClose}
-              className="btn btn-secondary"
-            >
-              Close
-            </button>
-            <button
-              onClick={onSave}
-              className="btn btn-primary"
-            >
-              Save
-            </button>
-          </div>
+          {title !== 'Editor Info' ? (
+            <div className="modal-buttons">
+              <button
+                onClick={onClose}
+                className="btn btn-secondary"
+              >
+                Close
+              </button>
+              <button
+                onClick={onSave}
+                className="btn btn-primary"
+              >
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="modal-buttons">
+              <button
+                onClick={onClose}
+                className="btn btn-secondary"
+              >
+                Close
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
