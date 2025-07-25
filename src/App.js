@@ -5,6 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './App.css';
 import info from "./assets/info.svg"
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,7 +120,7 @@ function App() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } else {
-      alert("Nothing to download.");
+      toast.success("Dude, C’mon! Put something in before you hit download.");
     }
   };
 
@@ -131,48 +132,53 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className="app-header">
-        <h2 style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>Editor with MathJax Support</h2>
-        <img src={info} alt="editor-info" style={{ width: "34px", height: "auto" }} />
+    <>
+      <div className="App">
+        <div className="app-header">
+          <h2 style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>Editor with MathJax Support</h2>
+          <img src={info} alt="editor-info" style={{ width: "34px", height: "auto" }} />
+        </div>
+        <div className="app-container">
+          <div style={{ margin: "10px", display: "flex", justifyContent: "flex-start", gap: "20px" }}>
+            {!questionContent[0]?.content && <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("question_text") }} className="demo-button">
+              Add Question Content
+            </button>
+            }
+            {questionContent[0]?.content &&
+              <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("option_text") }} className="demo-button">
+                Add Options
+              </button>
+            }
+            <button onClick={() => setQuestionContent([])} className="demo-button" disabled={!questionContent.length} style={{ backgroundColor: "#FE5D60" }}>
+              Clear All Content
+            </button>
+            <button onClick={handleDownload} className="demo-button" style={{ marginLeft: "auto" }}>
+              Download File
+            </button>
+          </div>
+          <div className="question_wrapper">
+            {questionContent.length ?
+              questionContent.map((ele, index) => (
+                <div
+                  key={index}
+                  style={{ cursor: "pointer", border: "1px dashed #eee", borderRadius: "8px" }}
+                  onClick={() => handleContentClick(index)}
+                  dangerouslySetInnerHTML={{ __html: ele.content }}
+                />
+              )) :
+              <div style={{ textAlign: "left", padding: "3px" }}>{"Add content to display here"}</div>
+            }
+          </div>
+        </div>
+        <Modal isOpen={isModalOpen} onClose={handleClose} onSave={handleSave} title="Content Editor">
+          <JoditEditorWithLatex
+            editorText={editorText}
+            setEditorText={setEditorText}
+          />
+        </Modal>
       </div>
-      {!questionContent[0]?.content && <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("question_text") }} className="demo-button">
-        Add Question Content
-      </button>
-      }
-      {questionContent[0]?.content &&
-        <button onClick={() => { setClickedIndex(-1); setEditorText(""); setIsModalOpen(true); setClassName("option_text") }} className="demo-button" style={{ marginLeft: "1.5rem" }}>
-          Add Options
-        </button>
-      }
-      <button onClick={handleDownload} className="demo-button" style={{ marginLeft: "1.5rem" }}>
-        Download File
-      </button>
-      <button onClick={() => setQuestionContent([])} className="demo-button" style={{ marginLeft: "1.5rem" }} disabled={!questionContent.length}>
-        Clear All Content
-      </button>
-
-      <Modal isOpen={isModalOpen} onClose={handleClose} onSave={handleSave} title="Content Editor">
-        <JoditEditorWithLatex
-          editorText={editorText}
-          setEditorText={setEditorText}
-        />
-      </Modal>
-
-      <div className="question_wrapper" style={{ textAlign: "left", padding: "0.5em", margin: "0.5em", border: "1px solid #ccc", borderRadius: "8px" }}>
-        {questionContent.length ?
-          questionContent.map((ele, index) => (
-            <div
-              key={index}
-              style={{ cursor: "pointer", border: "2px dashed #eee", borderRadius: "8px" }}
-              onClick={() => handleContentClick(index)}
-              dangerouslySetInnerHTML={{ __html: ele.content }}
-            />
-          )) :
-          <div style={{ textAlign: "left", padding: "3px" }}>{"Add content to display here"}</div>
-        }
-      </div>
-    </div>
+      <Toaster position="top-center" reverseOrder={false} />
+    </>
   );
 }
 
