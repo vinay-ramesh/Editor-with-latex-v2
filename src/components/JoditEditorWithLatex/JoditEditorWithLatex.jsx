@@ -248,7 +248,7 @@ const JoditEditorWithLatex = ({ editorText, setEditorText }) => {
     // Handle paste events to filter out local file references
     const handlePaste = useCallback((editorInstance) => {
         editorInstance.events.on('paste', (event) => {
-            const clipboardData = event.clipboardData || window.clipboardData;
+            const clipboardData = event.clipboardData || window.Clipboard;
             const htmlData = clipboardData.getData('text/html');
 
             if (htmlData) {
